@@ -1,23 +1,42 @@
-# bach-mozart-vivaldi-64l-32t-cmaj
+# NeuralCounterpoint
 
-Training experiments for a polyphonic music generation model using encoded classical music from Bach, Mozart, Vivaldi, and other composers. The dataset contains 491 songs and is focused on C major.
+> **Generative AI for polyphonic classical music composition using deep learning and symbolic MIDI representations.**
 
 ## Overview
 
-This repository contains a Jupyter Notebook workflow for training a TensorFlow/Keras recurrent neural network on encoded SATB-style music sequences. The model uses past, current, and future musical context to predict accompanying voices.
+NeuralCounterpoint is an experimental deep learning project for generating four-part classical harmony from symbolic music data.
 
-The main training notebook is:
+The project trains a TensorFlow/Keras recurrent neural network on encoded SATB-style musical sequences. The model learns relationships between soprano, alto, tenor, and bass voices by analyzing symbolic representations of classical compositions from Bach, Mozart, Vivaldi, and other composers.
 
-* `polybach-train-rnn.ipynb`
+Unlike audio generation systems, NeuralCounterpoint works with symbolic music data rather than raw waveforms. This allows the model to focus on musical structure, voice leading, harmony, rhythm, and counterpoint.
+
+The dataset used in this experiment contains **491 classical songs** normalized around **C major**.
+
+---
+
+## What This Repository Contains
+
+This repository contains the core training experiment for the NeuralCounterpoint project.
+
+The main training workflow is implemented in:
+
+```text
+polybach-train-rnn.ipynb
+```
 
 Supporting files include:
 
-* `GlobalConstants.py` — shared constants, symbols, paths, feature definitions, and voice mappings
-* `HelperFunctions.py` — helper utilities for loading MIDI and reading/writing CSV files
-* `requirements.txt` — Python package dependencies
-* `init.sh` — helper script for installing dependencies, converting the notebook to a script, and running training
+```text
+GlobalConstants.py        # Shared constants, symbols, feature definitions, and voice mappings
+HelperFunctions.py        # Utility functions for MIDI processing and CSV I/O
+mapping/                  # Encoded symbol mappings
+requirements.txt          # Python dependencies
+init.sh                   # Setup and notebook execution helper script
+```
 
-## Repository structure
+---
+
+## Repository Structure
 
 ```text
 .
@@ -30,58 +49,43 @@ Supporting files include:
 └── requirements.txt
 ```
 
-## Requirements
+---
 
-Install the Python dependencies with:
+## Model Architecture
 
-```bash
-pip install -r requirements.txt
-```
+NeuralCounterpoint uses a multi-input recurrent neural network designed for symbolic polyphonic music generation.
 
-The listed requirements are:
+The model uses:
+
+* LSTM layers for sequence modeling
+* Multi-input musical context
+* Dense layers for feature fusion
+* Multi-output prediction heads
+* Categorical cross-entropy loss
+* Adam optimization
+* Checkpoint-based training continuation
+
+The model predicts accompanying voices using surrounding musical context. In the related harmonizer application, the generation process is sequential:
+
+1. Bass is predicted first.
+2. Alto is predicted using the melody and generated bass.
+3. Tenor is predicted using the melody, bass, and alto.
+
+This allows the system to generate SATB-style harmonizations from an input melody.
+
+---
+
+## Training Data
+
+The notebook expects encoded symbolic music data, including:
 
 ```text
-music21
-wget
-pandas
-runipy
-pydot
+int_songs.csv
 ```
 
-The notebook also uses TensorFlow/Keras, NumPy, and Matplotlib, so make sure those are available in your environment.
+The training data is represented as integer sequences derived from MIDI files. These sequences are used to train the model on harmonic and melodic relationships across multiple voices.
 
-## Usage
-
-Clone the repository:
-
-```bash
-git clone https://github.com/davidalvin/bach-mozart-vivaldi-64l-32t-cmaj.git
-cd bach-mozart-vivaldi-64l-32t-cmaj
-```
-
-Install dependencies:
-
-```bash
-pip install -r requirements.txt
-```
-
-Run the notebook:
-
-```bash
-jupyter notebook polybach-train-rnn.ipynb
-```
-
-Or run the initialization script:
-
-```bash
-bash init.sh
-```
-
-The script installs requirements, converts the notebook to a Python script, and runs the generated script.
-
-## Training data
-
-The training notebook expects encoded song data, including an `int_songs.csv` file, to be available at the configured path. Update the path variables in the notebook before running, especially:
+Before running training locally, update the notebook paths for:
 
 ```python
 INT_SONGS_PATH
@@ -91,13 +95,11 @@ IN_PROGRESS_MODEL_PATH
 START_EPOCH
 ```
 
-The current notebook contains paths intended for a storage/Kaggle-style environment, so local users will likely need to change them.
+Some paths in the notebook were originally configured for a Kaggle or mounted-storage environment, so local users may need to modify them.
 
-## Model
+---
 
-The notebook defines a TensorFlow/Keras model for SATB-style polyphonic prediction. It uses LSTM layers for voice histories and dense layers for prediction. The model predicts bass, alto, and tenor outputs using soprano context and the surrounding musical sequence.
-
-Default training settings include:
+## Default Training Configuration
 
 ```python
 TRAIN_SEQUENCE_LENGTH = 64
@@ -107,21 +109,137 @@ LOSS = "categorical_crossentropy"
 
 Model checkpoints are saved as `.h5` files in the configured `SAVE_MODEL_PATH`.
 
+---
+
+## Installation
+
+Clone the repository:
+
+```bash
+git clone https://github.com/davidalvin/NeuralCounterpoint.git
+cd NeuralCounterpoint
+```
+
+Install dependencies:
+
+```bash
+pip install -r requirements.txt
+```
+
+The project also uses:
+
+* TensorFlow / Keras
+* NumPy
+* Pandas
+* Matplotlib
+* music21
+* pydot
+* wget
+* runipy
+
+---
+
+## Running the Training Notebook
+
+Launch the notebook:
+
+```bash
+jupyter notebook polybach-train-rnn.ipynb
+```
+
+or run the helper script:
+
+```bash
+bash init.sh
+```
+
+The script installs dependencies, converts the notebook to a Python script, and runs the generated script.
+
+---
+
 ## Running on Kaggle
 
-The notebook was originally structured for a Kaggle-style workflow. When running on Kaggle, upload the helper files and required datasets alongside the notebook:
+This project was originally structured for a Kaggle-style workflow.
 
-* `GlobalConstants.py`
-* `HelperFunctions.py`
-* encoded training data
-* mapping files, if required
+When running on Kaggle:
 
-Then update the notebook paths to match the Kaggle input/output directories.
+1. Upload the notebook.
+2. Upload `GlobalConstants.py`.
+3. Upload `HelperFunctions.py`.
+4. Upload the encoded training dataset.
+5. Upload the required mapping files.
+6. Update the notebook paths to match the Kaggle input/output directories.
+
+---
+
+## Related Projects
+
+NeuralCounterpoint is part of a larger end-to-end AI music generation system.
+
+| Repository                                                                             | Description                                                                                                           |
+| -------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
+| [NeuralCounterpoint](https://github.com/davidalvin/NeuralCounterpoint)                 | Core training experiment for generating SATB-style classical harmony from symbolic music data.                        |
+| [NeuralCounterpoint-Trainer](https://github.com/davidalvin/NeuralCounterpoint-Trainer) | Generalized TensorFlow/Keras training framework for experimenting with polyphonic music generation models.            |
+| [NeuralCounterpoint-Website](https://github.com/davidalvin/NeuralCounterpoint-Website) | Flask web application that lets users upload a MIDI melody and generate four-part SATB harmony using a trained model. |
+
+Together, these repositories demonstrate an end-to-end machine learning workflow:
+
+```text
+Symbolic MIDI preprocessing
+        ↓
+Deep learning model training
+        ↓
+Checkpointed TensorFlow/Keras model
+        ↓
+Flask web application deployment
+        ↓
+Interactive MIDI harmonization
+```
+
+---
+
+## Website Application
+
+The related `NeuralCounterpoint-Website` project provides an interactive interface for using trained NeuralCounterpoint models.
+
+The web app supports:
+
+* MIDI melody upload
+* MIDI validation
+* Sequential SATB harmony generation
+* Pretrained TensorFlow/Keras model inference
+* MIDI parsing and writing with `music21`
+* Downloadable harmonized MIDI output
+
+This connects the research/training work in this repository to a usable application for AI-assisted composition.
+
+---
+
+## Applications
+
+This project demonstrates techniques relevant to:
+
+* Generative AI
+* AI-assisted music composition
+* Symbolic music generation
+* Sequence modeling
+* Computational musicology
+* Deep learning research
+* Recurrent neural networks
+* Creative AI applications
+* End-to-end machine learning systems
+
+
+---
 
 ## Notes
 
-This is an experimental training repository. Some paths and model checkpoint references are environment-specific and may need to be edited before the notebook can run on a new machine.
+This repository represents an experimental research project. Some paths, checkpoints, and environment settings may need to be updated before running the notebook on a new machine.
+
+---
 
 ## Author
 
-Created by [davidalvin](https://github.com/davidalvin).
+**David Alvin**
+
+Machine Learning • Deep Learning • Generative AI • Music AI
