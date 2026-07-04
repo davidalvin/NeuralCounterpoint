@@ -1,24 +1,50 @@
 # NeuralCounterpoint
 
-> **Generative AI for polyphonic classical music composition using deep learning and symbolic MIDI representations.**
+> **End-to-end generative AI system for symbolic classical music composition, model training, and interactive MIDI harmonization.**
 
 ## Overview
 
-NeuralCounterpoint is an experimental deep learning project for generating four-part classical harmony from symbolic music data.
+NeuralCounterpoint is a multi-repository generative AI project for composing and harmonizing classical music using symbolic MIDI data and deep learning.
 
-The project trains a TensorFlow/Keras recurrent neural network on encoded SATB-style musical sequences. The model learns relationships between soprano, alto, tenor, and bass voices by analyzing symbolic representations of classical compositions from Bach, Mozart, Vivaldi, and other composers.
+This repository is the **core model training experiment** within the larger NeuralCounterpoint ecosystem. It focuses on training a TensorFlow/Keras recurrent neural network to learn SATB-style voice relationships from encoded classical music sequences. The broader project also includes a generalized trainer repository and a Flask-based web application that lets users upload MIDI melodies and generate four-part harmonized outputs using trained models.
 
-Unlike audio generation systems, NeuralCounterpoint works with symbolic music data rather than raw waveforms. This allows the model to focus on musical structure, voice leading, harmony, rhythm, and counterpoint.
+Together, the NeuralCounterpoint repositories demonstrate an end-to-end machine learning workflow:
 
-The dataset used in this experiment contains **~500 classical compositions**.
+```text
+Symbolic MIDI preprocessing
+        ↓
+Deep learning model training
+        ↓
+Model checkpointing and experimentation
+        ↓
+TensorFlow/Keras inference
+        ↓
+Flask web deployment
+        ↓
+Interactive MIDI harmonization
+```
 
 ---
 
-## What This Repository Contains
+## Project Ecosystem
 
-This repository contains the core training experiment for the NeuralCounterpoint project.
+| Repository                                                                             | Role                                                                                                                  |
+| -------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
+| [NeuralCounterpoint](https://github.com/davidalvin/NeuralCounterpoint)                 | Core training experiment for SATB-style classical harmony generation using encoded symbolic music data.               |
+| [NeuralCounterpoint-Trainer](https://github.com/davidalvin/NeuralCounterpoint-Trainer) | Generalized TensorFlow/Keras training framework for experimenting with polyphonic music generation models.            |
+| [NeuralCounterpoint-Website](https://github.com/davidalvin/NeuralCounterpoint-Website) | Flask web application for uploading MIDI melodies and generating four-part SATB harmonizations using a trained model. |
 
-The main training workflow is implemented in:
+The training repositories handle dataset preparation, symbolic sequence modeling, recurrent neural network training, and checkpoint generation. The website repository turns the trained model into an interactive application for AI-assisted music composition.
+
+---
+
+## This Repository
+
+This repository contains the training workflow used to build a polyphonic classical music generation model from encoded SATB-style music sequences.
+
+The dataset used in this experiment contains **491 classical songs** from Bach, Mozart, Vivaldi, and other composers, normalized around **C major**.
+
+The main workflow is implemented in:
 
 ```text
 polybach-train-rnn.ipynb
@@ -32,21 +58,6 @@ HelperFunctions.py        # Utility functions for MIDI processing and CSV I/O
 mapping/                  # Encoded symbol mappings
 requirements.txt          # Python dependencies
 init.sh                   # Setup and notebook execution helper script
-```
-
----
-
-## Repository Structure
-
-```text
-.
-├── GlobalConstants.py
-├── HelperFunctions.py
-├── README.md
-├── init.sh
-├── mapping/
-├── polybach-train-rnn.ipynb
-└── requirements.txt
 ```
 
 ---
@@ -65,7 +76,7 @@ The model uses:
 * Adam optimization
 * Checkpoint-based training continuation
 
-The model predicts accompanying voices using surrounding musical context. In the related harmonizer application, the generation process is sequential:
+The model learns harmonic relationships between soprano, alto, tenor, and bass voices. In the related web application, generation is performed sequentially:
 
 1. Bass is predicted first.
 2. Alto is predicted using the melody and generated bass.
@@ -172,35 +183,9 @@ When running on Kaggle:
 
 ---
 
-## Related Projects
-
-NeuralCounterpoint is part of a larger end-to-end AI music generation system.
-
-| Repository                                                                             | Description                                                                                                           |
-| -------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
-| [NeuralCounterpoint](https://github.com/davidalvin/NeuralCounterpoint)                 | Core training experiment for generating SATB-style classical harmony from symbolic music data.                        |
-| [NeuralCounterpoint-Trainer](https://github.com/davidalvin/NeuralCounterpoint-Trainer) | Generalized TensorFlow/Keras training framework for experimenting with polyphonic music generation models.            |
-| [NeuralCounterpoint-Website](https://github.com/davidalvin/NeuralCounterpoint-Website) | Flask web application that lets users upload a MIDI melody and generate four-part SATB harmony using a trained model. |
-
-Together, these repositories demonstrate an end-to-end machine learning workflow:
-
-```text
-Symbolic MIDI preprocessing
-        ↓
-Deep learning model training
-        ↓
-Checkpointed TensorFlow/Keras model
-        ↓
-Flask web application deployment
-        ↓
-Interactive MIDI harmonization
-```
-
----
-
 ## Website Application
 
-The related `NeuralCounterpoint-Website` project provides an interactive interface for using trained NeuralCounterpoint models.
+The related [NeuralCounterpoint-Website](https://github.com/davidalvin/NeuralCounterpoint-Website) repository provides an interactive Flask interface for using trained NeuralCounterpoint models.
 
 The web app supports:
 
@@ -211,7 +196,7 @@ The web app supports:
 * MIDI parsing and writing with `music21`
 * Downloadable harmonized MIDI output
 
-This connects the research/training work in this repository to a usable application for AI-assisted composition.
+This connects the training work in this repository to a usable application for AI-assisted composition.
 
 ---
 
@@ -228,7 +213,6 @@ This project demonstrates techniques relevant to:
 * Recurrent neural networks
 * Creative AI applications
 * End-to-end machine learning systems
-
 
 ---
 
