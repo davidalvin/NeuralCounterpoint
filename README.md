@@ -10,7 +10,7 @@ The project trains a TensorFlow/Keras recurrent neural network on encoded SATB-s
 
 Unlike audio generation systems, NeuralCounterpoint works with symbolic music data rather than raw waveforms. This allows the model to focus on musical structure, voice leading, harmony, rhythm, and counterpoint.
 
-The dataset used in this experiment contains **491 classical songs** normalized around **C major**.
+The dataset used in this experiment contains **~500 classical compositions**.
 
 ---
 
